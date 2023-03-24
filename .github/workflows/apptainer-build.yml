@@ -13,13 +13,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
       - uses: eWaterCycle/setup-apptainer@v2
         with:
           apptainer-version: 1.1.6
+          
       - uses: awalsh128/cache-apt-pkgs-action@latest
         with:
           packages: curl libxml2-utils gettext-base
           version: 1.0    
+          
       - name: Run Apptainer build
         run: bash check.sh
+
+      - name: Verify Changed files
+        uses: tj-actions/verify-changed-files@v13
+        id: verify-changed-files
+        with: 
+          files: |
+            *
+        
+      - name: Commit files
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "CI: Automated Apptainer build push [skip ci]" -a | exit 0
+          
+      - name: Push changes
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
