@@ -1,0 +1,23 @@
+name: apptainer-build
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: eWaterCycle/setup-apptainer@v2
+        with:
+          apptainer-version: 1.1.6
+      - uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: curl libxml2-utils gettext-base
+          version: 1.0    
+      - name: Run an apptainer container
+        run: apptainer run docker://alpine cat /etc/os-release
