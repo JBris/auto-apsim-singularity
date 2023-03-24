@@ -24,7 +24,7 @@ new_release="Singularity.${APSIM_VERSION}"
 
 if [ "$new_release" == "$current_release" ]; then
     echo "Most current release: $current_release"
-    exit 0
+    exit 1
 fi
 
 export APSIM_DEBIAN_DOWNLOAD=$(
