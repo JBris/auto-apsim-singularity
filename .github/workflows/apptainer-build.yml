@@ -19,5 +19,5 @@ jobs:
         with:
           packages: curl libxml2-utils gettext-base
           version: 1.0    
-      - name: Run an apptainer container
-        run: apptainer run docker://alpine cat /etc/os-release
+      - name: Run Apptainer build
+        run: bash check.sh
