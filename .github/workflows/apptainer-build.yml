@@ -18,11 +18,13 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           
-      - uses: eWaterCycle/setup-apptainer@v2
+      - name: Config Apptainer
+        uses: eWaterCycle/setup-apptainer@v2
         with:
           apptainer-version: 1.1.6
           
-      - uses: awalsh128/cache-apt-pkgs-action@latest
+      - name: Install deps
+        uses: awalsh128/cache-apt-pkgs-action@latest
         with:
           packages: curl libxml2-utils gettext-base
           version: 1.0    
